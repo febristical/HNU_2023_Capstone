@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // No optimization ever
 
 use image::{
@@ -241,3 +242,6 @@ impl Sandbox for Renderer {
         .into()
     }
 }
+=======
+// only renderer
+>>>>>>> 9c2e7ff5b7e4f8772de47e36d08fa0921f260dab
