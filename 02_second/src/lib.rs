@@ -33,10 +33,11 @@ struct Camera {
 impl Camera {
     fn direction(&self, xratio: f64, yratio: f64) -> Vector3 {
         let guide: f64 = 1.0 - xratio - yratio;
+        let long: Vector3 = guide * &self.origin 
+            + xratio * &self.righttop 
+            + yratio * &self.righttop;
 
-        &guide * &self.origin 
-        + &xratio * &self.righttop 
-        + &yratio * &self.righttop
+        long.norm().recip() * long
     }
 }
 
