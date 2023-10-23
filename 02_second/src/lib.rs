@@ -1,22 +1,7 @@
-mod foundation;
-use foundation::*;
+mod foundations;
+mod operators;
 
-struct Tracer {
-    distance: f64,
-    minimum: f64,
-    count: usize
-}
-
-struct Position {
-    object: Box<dyn DistanceField>,
-    position: Vector3
-}
-
-impl DistanceField for Position {
-    fn distance(&self, point: Vector3) -> f64 {
-        self.object.distance(point - self.position)
-    }
-}
+use foundations::*;
 
 struct Genus2 {
     hole_radius: f64,
