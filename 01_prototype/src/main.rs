@@ -1,13 +1,13 @@
 // No optimization ever
 
 use image::{
-    ImageFormat::Png,
     ImageBuffer,
     Luma, ImageResult
 };
 use iced::{
-    widget,
-    widget::{slider, container, button, column, row, text, image as imageviewer},
+    widget::{self,
+        slider, container, button, column, row, text,
+        image::Image, image::Handle},
     Alignment, Element, Sandbox, Settings, theme::Radio
 };
 use cgmath::{
@@ -20,7 +20,7 @@ use cgmath::{
 
 fn main() -> iced::Result {
     let mut setting = Settings::default();
-    setting.window.size = (320, 252);
+    setting.window.size = (640, 480);
     Renderer::run(setting)
 }
 
@@ -40,7 +40,7 @@ enum Message {
 }
 
 struct Renderer {
-    rendered: ImageBuffer<Luma<u8>, Vec<u8>>,
+    rendered: Vec<u8>,
     selected: RenderStyle,
     width: u32,
     height: u32,
@@ -48,7 +48,7 @@ struct Renderer {
 }
 
 impl Renderer {
-    fn render(&self) -> ImageResult<()> {
+    fn render(&mut self) {
         let angle = Deg(self.angle as f32);
         let position = Point3::new(4.0 * angle.cos(), 4.0 * angle.sin(), 4.0);
 
@@ -59,125 +59,61 @@ impl Renderer {
         let mut ypitch = xpitch.cross(camera);
         xpitch = xpitch / xpitch.dot(xpitch).sqrt();
         ypitch = ypitch / ypitch.dot(ypitch).sqrt();
-
-        let mut stepmap: Vec<u8> = vec![0; 57600];
-        let mut distancemap: Vec<f32> = vec![0.0; 57600];
-        let mut minmap: Vec<f32> = vec![f32::MAX; 57600];
-        let mut reachmap: Vec<bool> = vec![false; 57600];
         let mut steps: u8 = 255;
 
-        for x in 0..320_usize {
-            for y in 0..180_usize {
-                let index = y * 320 + x;
+        for x in 0..640_usize {
+            for y in 0..360_usize {
+                let index = y * 640 + x;
+                let mut min = f32::MAX;
+                let mut marched = 0.0;
 
-                let xdisplacement = xpitch * ((x as f32 / 320.0) - 0.5);
-                let ydisplacement = ypitch * ((y as f32 / 180.0) - 0.5);
+                let xdisplacement = xpitch * ((x as f32 / 640.0) - 0.5);
+                let ydisplacement = ypitch * ((y as f32 / 360.0) - 0.5);
 
                 let mut current_position = position;
                 let mut current_direction = camera + xdisplacement + ydisplacement;
                 current_direction = current_direction / current_direction.dot(current_direction).sqrt();
                 
-                'renderpath: for step in 0..steps {
+                for step in 0..steps {
                     let march = self.march(current_position);
                     current_position += (current_direction * march);
 
-                    stepmap[index] += 1;
-                    distancemap[index] += march;
+                    marched += march;
 
-                    if march < 0.0001 {
-                        reachmap[index] = true;
-                        break 'renderpath;
-                    } else if march < minmap[index] {
-                        minmap[index] = march;
-                    }
-                }
-            }
-        }
+                    if march < 0.001 {
+                        (self.rendered[index * 4],
+                        self.rendered[index * 4 + 1],
+                        self.rendered[index * 4 + 2],
+                        self.rendered[index * 4 + 3]) = match self.selected
+                        {
+                            RenderStyle::Fill => {
+                                (255, 255, 255, 255)
+                            },
+                            RenderStyle::Distance => {
+                                let marched = (255.0 / marched) as u8;
+                                (marched, marched, marched, 255)
+                            }
+                            _ => (0, 0, 0, 255)
+                        };
 
-        let maximum_distance = distancemap
-            .iter()
-            .zip(
-                reachmap.iter()
-            ).filter(
-                |(_, &reached)|
-                reached
-            ).fold(0.0,
-                |acc, (&marched, _)|
-                if acc > marched {
-                    marched
-                } else {
-                    acc
-                }
-            );
-        let minimum_distance = distancemap
-            .iter()
-            .zip(
-                reachmap.iter()
-            ).filter(
-                |(_, &reached)|
-                reached
-            ).fold(0.0,
-                |acc, (&marched, _)|
-                if acc < marched {
-                    marched
-                } else {
-                    acc
-                }
-            );
-        let mut rendered_image = ImageBuffer::new(320, 180);
-
-        for (x, y, pixel) in rendered_image.enumerate_pixels_mut() {
-            let index = (y * 320 + x) as usize;
-            *pixel = match self.selected {
-                RenderStyle::Border => {
-                    if reachmap[index] == true {
-                        if let Some(luma) = stepmap[index].checked_mul(16) {
-                            Luma([luma])
-                        } else {
-                            Luma([255])
+                        break;
+                    } else if march < min {
+                        min = march;
+                    } else if step + 1 == steps {
+                        (
+                            self.rendered[index * 4],
+                            self.rendered[index * 4 + 1],
+                            self.rendered[index * 4 + 2],
+                            self.rendered[index * 4 + 3]
+                        ) = match self.selected {
+                            RenderStyle::Border => {
+                                let luma = (2.0 / min) as u8;
+                                (luma, luma, luma, 255)
+                            },
+                            _ => (0, 0, 0, 255)
                         }
-                    } else {
-                        Luma([0])
                     }
                 }
-                RenderStyle::Distance => {
-                    if reachmap[index] == true {
-                        let luma = (distancemap[index] - minimum_distance) / (maximum_distance - minimum_distance);
-                        if luma < 0.2 {
-                            Luma([(luma * 1275.0) as u8])
-                        } else {
-                            Luma([255])
-                        }
-                    } else {
-                        Luma([0])
-                    }
-                },
-                RenderStyle::Fill => {
-                    if reachmap[index] == true {
-                        Luma([255])
-                    } else {
-                        Luma([0])
-                    }
-                },
-                _ => {Luma([0])}
-            }
-        }
-
-        match self.selected {
-            RenderStyle::Border => {
-                rendered_image.save("renderedborder.png")
-            }
-            RenderStyle::Distance => {
-                rendered_image.save("rendereddistance.png")
-            }
-            RenderStyle::Fill => {
-                rendered_image.save("renderedfill.png")
-            }
-            RenderStyle::None => {
-                rendered_image.save("renderednone.png")
-            }
-            RenderStyle::Shadow => {
-                rendered_image.save("renderedshadow.png")
             }
         }
     }
@@ -194,10 +130,10 @@ impl Sandbox for Renderer {
 
     fn new() -> Self {
         Self {
-            rendered: ImageBuffer::new(320, 180),
+            rendered: vec![0; 640 * 360 * 4],
             selected: RenderStyle::None,
-            width: 320,
-            height: 180,
+            width: 640,
+            height: 360,
             angle: 0
         }
     }
@@ -211,6 +147,8 @@ impl Sandbox for Renderer {
             Message::StyleSelected(style) => self.selected = style,
             Message::SliderChanged(angle) => self.angle = angle,
         }
+
+        self.render();
     }
 
     fn view(&self) -> Element<'_, Self::Message> {
@@ -220,22 +158,19 @@ impl Sandbox for Renderer {
             button("distance").on_press(Message::StyleSelected(RenderStyle::Distance)).width(80),
             button("shadow").on_press(Message::StyleSelected(RenderStyle::Shadow)).width(80),
         ];
-        let slider = slider(0..=179, self.angle, Message::SliderChanged).width(320);
+        let slider = slider(0..=179, self.angle, Message::SliderChanged).width(640);
         let description = text(format!("angle: {}, style: {:?}", self.angle, self.selected));
-        self.render();
-        let rendered_image = imageviewer(
-            match self.selected {
-                RenderStyle::Border => "renderedborder.png",
-                RenderStyle::Distance => "rendereddistance.png",
-                RenderStyle::Fill => "renderedfill.png",
-                RenderStyle::None => "renderednone.png",
-                RenderStyle::Shadow => "renderedshadow.png"
-            }
+        let rendered_image = Image::new(
+            Handle::from_pixels(
+                640,
+                360,
+                self.rendered.clone()
+            )
         );
 
         container(column![description, rendered_image, slider, buttonsrow])
-        .width(320)
-        .height(254)
+        .width(640)
+        .height(480)
         .center_x()
         .center_y()
         .into()
