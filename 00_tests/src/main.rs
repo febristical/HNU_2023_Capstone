@@ -67,8 +67,6 @@ impl Sandbox for Circle {
             );
         let drawed = image::Image::new(handle.clone());
 
-        println!("{:?}", handle.data());
-
         let slider = slider(0..=255_u8, self.radius.0, Radius).width(255);
 
         container(column![drawed, slider])
