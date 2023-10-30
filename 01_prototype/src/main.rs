@@ -59,7 +59,7 @@ impl Renderer {
         let mut ypitch = xpitch.cross(camera);
         xpitch = xpitch / xpitch.dot(xpitch).sqrt();
         ypitch = ypitch / ypitch.dot(ypitch).sqrt();
-        let mut steps: u8 = 255;
+        let mut steps: u8 = 64;
 
         for x in 0..640_usize {
             for y in 0..360_usize {
@@ -80,7 +80,7 @@ impl Renderer {
 
                     marched += march;
 
-                    if march < 0.001 {
+                    if march < 0.005 {
                         (self.rendered[index * 4],
                         self.rendered[index * 4 + 1],
                         self.rendered[index * 4 + 2],
@@ -90,7 +90,7 @@ impl Renderer {
                                 (255, 255, 255, 255)
                             },
                             RenderStyle::Distance => {
-                                let marched = (255.0 / marched) as u8;
+                                let marched = (54.0 / (marched - 3.75)) as u8;
                                 (marched, marched, marched, 255)
                             }
                             _ => (0, 0, 0, 255)
@@ -99,7 +99,7 @@ impl Renderer {
                         break;
                     } else if march < min {
                         min = march;
-                    } else if step + 1 == steps {
+                    } else if step + 1 == steps || marched > 8.0 {
                         (
                             self.rendered[index * 4],
                             self.rendered[index * 4 + 1],
@@ -111,7 +111,9 @@ impl Renderer {
                                 (luma, luma, luma, 255)
                             },
                             _ => (0, 0, 0, 255)
-                        }
+                        };
+
+                        break;
                     }
                 }
             }
