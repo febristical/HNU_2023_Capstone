@@ -59,16 +59,17 @@ impl Renderer {
         let mut ypitch = xpitch.cross(camera);
         xpitch = xpitch / xpitch.dot(xpitch).sqrt();
         ypitch = ypitch / ypitch.dot(ypitch).sqrt();
-        let mut steps: u8 = 255;
 
-        for x in 0..640_usize {
-            for y in 0..360_usize {
-                let index = y * 640 + x;
+        let mut steps: u8 = 24;
+        let mut marchedmap = vec![0.0; self.width as usize * self.height as usize];
+
+        for x in 0..self.width as usize {
+            for y in 0..self.height as usize {
+                let index = y * self.width as usize + x;
                 let mut min = f32::MAX;
-                let mut marched = 0.0;
 
-                let xdisplacement = xpitch * ((x as f32 / 640.0) - 0.5);
-                let ydisplacement = ypitch * ((y as f32 / 360.0) - 0.5);
+                let xdisplacement = xpitch * ((x as f32 / self.width as f32) - 0.5);
+                let ydisplacement = ypitch * ((y as f32 / self.height as f32) - 0.5);
 
                 let mut current_position = position;
                 let mut current_direction = camera + xdisplacement + ydisplacement;
@@ -78,9 +79,9 @@ impl Renderer {
                     let march = self.march(current_position);
                     current_position += (current_direction * march);
 
-                    marched += march;
+                    marchedmap[index] += march;
 
-                    if march < 0.001 {
+                    if march < 0.01 {
                         (self.rendered[index * 4],
                         self.rendered[index * 4 + 1],
                         self.rendered[index * 4 + 2],
@@ -90,7 +91,7 @@ impl Renderer {
                                 (255, 255, 255, 255)
                             },
                             RenderStyle::Distance => {
-                                let marched = (255.0 / marched) as u8;
+                                let marched = (255.0 / marchedmap[index]) as u8;
                                 (marched, marched, marched, 255)
                             }
                             _ => (0, 0, 0, 255)
@@ -99,7 +100,7 @@ impl Renderer {
                         break;
                     } else if march < min {
                         min = march;
-                    } else if step + 1 == steps {
+                    } else if step + 1 == steps || marchedmap[index] > 240.0 {
                         (
                             self.rendered[index * 4],
                             self.rendered[index * 4 + 1],
@@ -111,7 +112,7 @@ impl Renderer {
                                 (luma, luma, luma, 255)
                             },
                             _ => (0, 0, 0, 255)
-                        }
+                        };
                     }
                 }
             }
