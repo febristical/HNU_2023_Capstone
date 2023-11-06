@@ -59,10 +59,7 @@ impl Renderer {
         let mut ypitch = xpitch.cross(camera);
         xpitch = xpitch / xpitch.dot(xpitch).sqrt();
         ypitch = ypitch / ypitch.dot(ypitch).sqrt();
-<<<<<<< HEAD
         let mut steps: u8 = 64;
-=======
->>>>>>> origin/main
 
         let mut steps: u8 = 24;
         let mut marchedmap = vec![0.0; self.width as usize * self.height as usize];
@@ -85,11 +82,7 @@ impl Renderer {
 
                     marchedmap[index] += march;
 
-<<<<<<< HEAD
                     if march < 0.005 {
-=======
-                    if march < 0.01 {
->>>>>>> origin/main
                         (self.rendered[index * 4],
                         self.rendered[index * 4 + 1],
                         self.rendered[index * 4 + 2],
@@ -99,11 +92,7 @@ impl Renderer {
                                 (255, 255, 255, 255)
                             },
                             RenderStyle::Distance => {
-<<<<<<< HEAD
-                                let marched = (54.0 / (marched - 3.75)) as u8;
-=======
-                                let marched = (255.0 / marchedmap[index]) as u8;
->>>>>>> origin/main
+                                let marched = (54.0 / (marchedmap[index] - 3.75)) as u8;
                                 (marched, marched, marched, 255)
                             }
                             _ => (0, 0, 0, 255)
@@ -112,11 +101,7 @@ impl Renderer {
                         break;
                     } else if march < min {
                         min = march;
-<<<<<<< HEAD
-                    } else if step + 1 == steps || marched > 8.0 {
-=======
-                    } else if step + 1 == steps || marchedmap[index] > 240.0 {
->>>>>>> origin/main
+                    } else if step + 1 == steps || marchedmap[index] > 8.0 {
                         (
                             self.rendered[index * 4],
                             self.rendered[index * 4 + 1],
@@ -129,11 +114,8 @@ impl Renderer {
                             },
                             _ => (0, 0, 0, 255)
                         };
-<<<<<<< HEAD
 
                         break;
-=======
->>>>>>> origin/main
                     }
                 }
             }
