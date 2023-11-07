@@ -34,14 +34,9 @@
     )
 )
 
-#bigtitle(alignment: horizon + center, "테스트")
+#bigtitle(alignment: horizon + center, "Ray Marching 을 이용한 3D 렌더링")
 
-#verifier("테스트", "테스트")
+#verifier("한남대학교 수학과", "20172581 김남훈")
 
 #pagebreak()
 
-#contentbox("정의", "안녕",
-    [
-        세계 $integral$
-    ]
-)
