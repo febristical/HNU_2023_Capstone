@@ -105,3 +105,16 @@ figure(
         + $d_i < epsilon$ 이면 $v$ 방향에 $S$ 가 존재하며, $d_0 + dots + d_i > D$ 이면 $v$ 방향에 $S$ 가 존재하지 않는다.
     ]
 )
+
+#pagebreak()
+
+#figure(
+    box(
+        stroke: luma(0),
+        image(
+        "march.png"
+        )
+    ),
+    caption: text(size: 14pt, "레이 마칭으로 왼쪽 위의 빨간 점을 오른쪽 아래로 전진시키는 과정"),
+    supplement: none
+)
