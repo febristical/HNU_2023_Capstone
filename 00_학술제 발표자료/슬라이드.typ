@@ -115,6 +115,6 @@ figure(
         "march.png"
         )
     ),
-    caption: text(size: 14pt, "레이 마칭으로 왼쪽 위의 빨간 점을 오른쪽 아래로 전진시키는 과정"),
+    caption: text(size: 14pt, "레이 마칭으로 왼쪽 위의 빨간 점을 오른쪽 아래로 전진시키는 과정" ),
     supplement: none
 )
