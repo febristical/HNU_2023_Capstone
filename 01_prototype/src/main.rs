@@ -1,22 +1,19 @@
 // No optimization ever
 
-use image::{
-    ImageBuffer,
-    Luma, ImageResult
-};
 use iced::{
-    widget::{self,
+    widget::{
         slider, container, button, column, row, text,
         image::Image, image::Handle},
-    Alignment, Element, Sandbox, Settings, theme::Radio
+    Element, Sandbox, Settings
 };
+
 use cgmath::{
     prelude::*,
     Point3,
-    Vector3,
-    Matrix3,
-    Deg, point3
+    Deg
 };
+
+use tokio;
 
 fn main() -> iced::Result {
     let mut setting = Settings::default();
@@ -48,9 +45,11 @@ struct Renderer {
 }
 
 impl Renderer {
-    fn render(&mut self) {
+    async fn render(&mut self) {
         let angle = Deg(self.angle as f32);
         let position = Point3::new(4.0 * angle.cos(), 4.0 * angle.sin(), 4.0);
+        let mut rendered = self.rendered.clone();
+        let (selected, width, height) = (self.selected, self.width, self.height);
 
         let mut camera = cgmath::vec3(- position.x, -position.y, -position.z + 1.0);
         camera = camera / camera.dot(camera).sqrt();
@@ -59,74 +58,74 @@ impl Renderer {
         let mut ypitch = xpitch.cross(camera);
         xpitch = xpitch / xpitch.dot(xpitch).sqrt();
         ypitch = ypitch / ypitch.dot(ypitch).sqrt();
-        let mut steps: u8 = 64;
 
-        let mut steps: u8 = 24;
+        let steps: u8 = 24;
         let mut marchedmap = vec![0.0; self.width as usize * self.height as usize];
 
-        for x in 0..self.width as usize {
-            for y in 0..self.height as usize {
-                let index = y * self.width as usize + x;
-                let mut min = f32::MAX;
+        tokio::spawn(async move {            
+            for x in 0..width as usize {
+                for y in 0..height as usize {
+                    let index = y * width as usize + x;
+                    let mut min = f32::MAX;
 
-                let xdisplacement = xpitch * ((x as f32 / self.width as f32) - 0.5);
-                let ydisplacement = ypitch * ((y as f32 / self.height as f32) - 0.5);
+                    let xdisplacement = xpitch * ((x as f32 / width as f32) - 0.5);
+                    let ydisplacement = ypitch * ((y as f32 / height as f32) - 0.5);
 
-                let mut current_position = position;
-                let mut current_direction = camera + xdisplacement + ydisplacement;
-                current_direction = current_direction / current_direction.dot(current_direction).sqrt();
-                
-                for step in 0..steps {
-                    let march = self.march(current_position);
-                    current_position += (current_direction * march);
+                    let mut current_position = position;
+                    let mut current_direction = camera + xdisplacement + ydisplacement;
+                    current_direction = current_direction / current_direction.dot(current_direction).sqrt();
+                    
+                    for step in 0..steps {
+                        let march = march(current_position);
+                        current_position += (current_direction * march);
 
-                    marchedmap[index] += march;
+                        marchedmap[index] += march;
 
-                    if march < 0.005 {
-                        (self.rendered[index * 4],
-                        self.rendered[index * 4 + 1],
-                        self.rendered[index * 4 + 2],
-                        self.rendered[index * 4 + 3]) = match self.selected
-                        {
-                            RenderStyle::Fill => {
-                                (255, 255, 255, 255)
-                            },
-                            RenderStyle::Distance => {
-                                let marched = (54.0 / (marchedmap[index] - 3.75)) as u8;
-                                (marched, marched, marched, 255)
-                            }
-                            _ => (0, 0, 0, 255)
-                        };
+                        if march < 0.005 {
+                            (rendered[index * 4],
+                            rendered[index * 4 + 1],
+                            rendered[index * 4 + 2],
+                            rendered[index * 4 + 3]) = match selected
+                            {
+                                RenderStyle::Fill => {
+                                    (255, 255, 255, 255)
+                                },
+                                RenderStyle::Distance => {
+                                    let marched = (54.0 / (marchedmap[index] - 3.75)) as u8;
+                                    (marched, marched, marched, 255)
+                                }
+                                _ => (0, 0, 0, 255)
+                            };
 
-                        break;
-                    } else if march < min {
-                        min = march;
-                    } else if step + 1 == steps || marchedmap[index] > 8.0 {
-                        (
-                            self.rendered[index * 4],
-                            self.rendered[index * 4 + 1],
-                            self.rendered[index * 4 + 2],
-                            self.rendered[index * 4 + 3]
-                        ) = match self.selected {
-                            RenderStyle::Border => {
-                                let luma = (2.0 / min) as u8;
-                                (luma, luma, luma, 255)
-                            },
-                            _ => (0, 0, 0, 255)
-                        };
+                            break;
+                        } else if march < min {
+                            min = march;
+                        } else if step + 1 == steps || marchedmap[index] > 8.0 {
+                            (
+                                rendered[index * 4],
+                                rendered[index * 4 + 1],
+                                rendered[index * 4 + 2],
+                                rendered[index * 4 + 3]
+                            ) = match selected {
+                                RenderStyle::Border => {
+                                    let luma = (2.0 / min) as u8;
+                                    (luma, luma, luma, 255)
+                                },
+                                _ => (0, 0, 0, 255)
+                            };
 
-                        break;
+                            break;
+                        }
                     }
                 }
-            }
-        }
+            }}).await.unwrap();
     }
+}
 
-    fn march(&self, position: Point3<f32>) -> f32 {
-        let relative = position - cgmath::point3(0.0, 0.0, 1.0);
-        let (projection_radius, altitude) = ((relative.y.powi(2) + relative.z.powi(2)).sqrt(), relative.x);
-        ((projection_radius - 0.75).powi(2) + altitude.powi(2)).sqrt() - 0.25
-    }
+fn march(position: Point3<f32>) -> f32 {
+    let relative = position - cgmath::point3(0.0, 0.0, 1.0);
+    let (projection_radius, altitude) = ((relative.y.powi(2) + relative.z.powi(2)).sqrt(), relative.x);
+    ((projection_radius - 0.75).powi(2) + altitude.powi(2)).sqrt() - 0.25
 }
 
 impl Sandbox for Renderer {
