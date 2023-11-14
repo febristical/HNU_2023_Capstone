@@ -81,4 +81,4 @@ class StateSignal extends $pb.GeneratedMessage {
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
 const _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
 
-const ID = 2;
+const ID = 3;

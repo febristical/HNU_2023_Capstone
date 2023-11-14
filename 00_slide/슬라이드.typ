@@ -121,3 +121,13 @@ figure(
 
 #pagebreak()
 
+#box(
+    fill: rgb("F0F0F0"),
+    outset: 10pt,
+    ```rust
+fn march(position: linear::Vector3) -> f32 {
+    let p = positon;
+    let (r, z) = ((p.1.powi(2) + p.2.powi(2)).sqrt(), p.0);
+    return ((r - 0.75).powi(2) + z.powi(2)).sqrt() - 0.25;
+}
+```)

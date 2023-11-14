@@ -1,0 +1,11 @@
+syntax = "proto3";
+package render_request;
+
+message RenderRequest {
+  double angle = 1;
+  uint32 style = 2;
+}
+message RenderResponse {
+    bytes image = 1;
+}
+  

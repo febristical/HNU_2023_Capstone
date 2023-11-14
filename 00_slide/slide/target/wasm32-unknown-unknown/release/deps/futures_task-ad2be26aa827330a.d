@@ -1,0 +1,10 @@
+C:\Users\knh19\Documents\Hnu_2023_Capstone\00_slide\slide\target\wasm32-unknown-unknown\release\deps\libfutures_task-ad2be26aa827330a.rmeta: C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-task-0.3.29\src\lib.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-task-0.3.29\src\spawn.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-task-0.3.29\src\future_obj.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-task-0.3.29\src\noop_waker.rs
+
+C:\Users\knh19\Documents\Hnu_2023_Capstone\00_slide\slide\target\wasm32-unknown-unknown\release\deps\libfutures_task-ad2be26aa827330a.rlib: C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-task-0.3.29\src\lib.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-task-0.3.29\src\spawn.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-task-0.3.29\src\future_obj.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-task-0.3.29\src\noop_waker.rs
+
+C:\Users\knh19\Documents\Hnu_2023_Capstone\00_slide\slide\target\wasm32-unknown-unknown\release\deps\futures_task-ad2be26aa827330a.d: C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-task-0.3.29\src\lib.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-task-0.3.29\src\spawn.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-task-0.3.29\src\future_obj.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-task-0.3.29\src\noop_waker.rs
+
+C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-task-0.3.29\src\lib.rs:
+C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-task-0.3.29\src\spawn.rs:
+C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-task-0.3.29\src\future_obj.rs:
+C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\futures-task-0.3.29\src\noop_waker.rs:

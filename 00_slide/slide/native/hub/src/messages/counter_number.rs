@@ -35,4 +35,4 @@ pub struct SampleSchema {
 }
 // @@protoc_insertion_point(module)
 
-pub const ID: i32 = 3;
+pub const ID: i32 = 2;

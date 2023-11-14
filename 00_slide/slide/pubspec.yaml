@@ -21,3 +21,8 @@ dev_dependencies:
     sdk: flutter
 flutter:
   uses-material-design: true
+  assets:
+    - images/raytrace.png
+    - images/march.png
+    - images/torus.png
+    - images/marchcode.png
