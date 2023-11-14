@@ -1,0 +1,11 @@
+C:\Users\knh19\Documents\Hnu_2023_Capstone\00_slide\slide\target\debug\deps\winreg-08f7df3dcfaea0f3.rmeta: C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\lib.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\common.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\enums.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\reg_key.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\reg_key_metadata.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\reg_value.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\types.rs
+
+C:\Users\knh19\Documents\Hnu_2023_Capstone\00_slide\slide\target\debug\deps\winreg-08f7df3dcfaea0f3.d: C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\lib.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\common.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\enums.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\reg_key.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\reg_key_metadata.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\reg_value.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\types.rs
+
+C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\lib.rs:
+C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\common.rs:
+C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\enums.rs:
+C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\reg_key.rs:
+C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\reg_key_metadata.rs:
+C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\reg_value.rs:
+C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\winreg-0.11.0\src\types.rs:

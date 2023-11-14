@@ -148,13 +148,56 @@ class _MyHomePage extends State<MyHomePage> {
 class TitlePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(child: Column(children: []));
+    final theme = Theme.of(context);
+    // ↓ Add this.
+    final style = theme.textTheme.displayLarge!.copyWith(
+      color: theme.colorScheme.onPrimary,
+    );
+
+    return Container(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Spacer(),
+      Card(
+        color: theme.colorScheme.primary,
+        child: Padding(
+          padding: const EdgeInsets.all(64.0),
+          child: Text('Ray Marching 을 이용한 3D 렌더링', style: style),
+        ),
+      ),
+      Spacer(),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Text(
+                  '한남대학교 수학과',
+                  style: theme.textTheme.displaySmall,
+                ),
+                Text(
+                  '20172581 김남훈',
+                  style: theme.textTheme.displaySmall,
+                ),
+              ],
+            ),
+          ),
+        ],
+      )
+    ]));
   }
 }
 
 class WhatisRenderingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    // ↓ Add this.
+    final style = theme.textTheme.displayMedium!.copyWith(
+      color: theme.colorScheme.onPrimary,
+    );
+
     return Container(
       child: Text('what is rendering?'),
     );

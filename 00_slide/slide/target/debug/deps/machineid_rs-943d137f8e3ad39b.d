@@ -1,0 +1,10 @@
+C:\Users\knh19\Documents\Hnu_2023_Capstone\00_slide\slide\target\debug\deps\machineid_rs-943d137f8e3ad39b.rmeta: C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\machineid-rs-1.2.4\src\lib.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\machineid-rs-1.2.4\src\errors.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\machineid-rs-1.2.4\src\linux.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\machineid-rs-1.2.4\src\utils.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\machineid-rs-1.2.4\src\windows.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\machineid-rs-1.2.4\src\macos.rs
+
+C:\Users\knh19\Documents\Hnu_2023_Capstone\00_slide\slide\target\debug\deps\machineid_rs-943d137f8e3ad39b.d: C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\machineid-rs-1.2.4\src\lib.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\machineid-rs-1.2.4\src\errors.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\machineid-rs-1.2.4\src\linux.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\machineid-rs-1.2.4\src\utils.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\machineid-rs-1.2.4\src\windows.rs C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\machineid-rs-1.2.4\src\macos.rs
+
+C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\machineid-rs-1.2.4\src\lib.rs:
+C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\machineid-rs-1.2.4\src\errors.rs:
+C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\machineid-rs-1.2.4\src\linux.rs:
+C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\machineid-rs-1.2.4\src\utils.rs:
+C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\machineid-rs-1.2.4\src\windows.rs:
+C:\Users\knh19\.cargo\registry\src\index.crates.io-6f17d22bba15001f\machineid-rs-1.2.4\src\macos.rs:
