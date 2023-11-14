@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:provider/provider.dart';
@@ -610,12 +611,21 @@ class _ShowingPageState extends State<ShowingPage> {
         Text('Showing', style: style),
         Container(
           width: 640,
-          height: 640,
+          height: 480,
           child: _isRendered
-              ? Image.memory(
+              ? Container(
+                  color: theme.colorScheme.primaryContainer,
+                  child: Center(
+                    child: Text(
+                      'Rendered',
+                      style: style,
+                    ),
+                  ),
+                )
+              /*Image.memory(
                   _renderedImages,
                   fit: BoxFit.contain,
-                )
+                )*/
               : Container(
                   color: theme.colorScheme.primaryContainer,
                   child: Center(
@@ -664,6 +674,10 @@ class _ShowingPageState extends State<ShowingPage> {
             style: ElevatedButton.styleFrom(
                 primary: theme.colorScheme.secondaryContainer),
             onPressed: () async {
+              setState(() {
+                _isRendered = true;
+              });
+
               final requestMessage = renderRequest.RenderRequest(
                 angle: _currentAngle,
                 style: _isSelected.indexOf(true),
@@ -680,7 +694,6 @@ class _ShowingPageState extends State<ShowingPage> {
 
               setState(() {
                 _renderedImages = Uint8List.fromList(responseMessage.image);
-                _isRendered = true;
               });
             },
             child: Padding(

@@ -1,18 +1,4 @@
-2023/11/14-22:32:03.908 31d4 Reusing MANIFEST C:\Users\knh19\AppData\Local\Temp\flutter_tools.79ae25b0\flutter_tools_chrome_device.991fa8d9\Default\Session Storage/MANIFEST-000001
-2023/11/14-22:32:03.909 31d4 Recovering log #3
-2023/11/14-22:32:03.911 31d4 Reusing old log C:\Users\knh19\AppData\Local\Temp\flutter_tools.79ae25b0\flutter_tools_chrome_device.991fa8d9\Default\Session Storage/000003.log 
-2023/11/14-23:39:38.565 31d4 Level-0 table #5: started
-2023/11/14-23:39:38.574 31d4 Level-0 table #5: 89776 bytes OK
-2023/11/14-23:39:38.580 31d4 Delete type=0 #3
-2023/11/14-23:41:16.510 31d4 Level-0 table #7: started
-2023/11/14-23:41:16.514 31d4 Level-0 table #7: 41843 bytes OK
-2023/11/14-23:41:16.519 31d4 Delete type=0 #4
-2023/11/15-00:14:47.024 31d4 Level-0 table #9: started
-2023/11/15-00:14:47.029 31d4 Level-0 table #9: 75441 bytes OK
-2023/11/15-00:14:47.036 31d4 Delete type=0 #6
-2023/11/15-00:17:59.617 31d4 Level-0 table #11: started
-2023/11/15-00:17:59.622 31d4 Level-0 table #11: 58832 bytes OK
-2023/11/15-00:17:59.630 31d4 Delete type=0 #8
-2023/11/15-00:18:07.375 31d4 Level-0 table #13: started
-2023/11/15-00:18:07.379 31d4 Level-0 table #13: 82063 bytes OK
-2023/11/15-00:18:07.383 31d4 Delete type=0 #10
+2023/11/15-01:44:06.455 6f58 Reusing MANIFEST C:\Users\knh19\AppData\Local\Temp\flutter_tools.f9e4c328\flutter_tools_chrome_device.13fb7d01\Default\Session Storage/MANIFEST-000001
+2023/11/15-01:44:06.455 6f58 Recovering log #12
+2023/11/15-01:44:06.457 6f58 Reusing old log C:\Users\knh19\AppData\Local\Temp\flutter_tools.f9e4c328\flutter_tools_chrome_device.13fb7d01\Default\Session Storage/000012.log 
+2023/11/15-01:44:06.457 6f58 Delete type=0 #3
