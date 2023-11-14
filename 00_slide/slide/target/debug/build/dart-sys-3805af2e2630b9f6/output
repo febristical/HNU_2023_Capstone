@@ -1,0 +1,47 @@
+TARGET = Some("aarch64-apple-darwin")
+OPT_LEVEL = Some("0")
+HOST = Some("aarch64-apple-darwin")
+cargo:rerun-if-env-changed=CC_aarch64-apple-darwin
+CC_aarch64-apple-darwin = None
+cargo:rerun-if-env-changed=CC_aarch64_apple_darwin
+CC_aarch64_apple_darwin = None
+cargo:rerun-if-env-changed=HOST_CC
+HOST_CC = None
+cargo:rerun-if-env-changed=CC
+CC = None
+cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+CRATE_CC_NO_DEFAULTS = None
+DEBUG = Some("true")
+CARGO_CFG_TARGET_FEATURE = Some("aes,crc,dit,dotprod,dpb,dpb2,fcma,fhm,flagm,fp16,frintts,jsconv,lor,lse,neon,paca,pacg,pan,pmuv3,ras,rcpc,rcpc2,rdm,sb,sha2,sha3,ssbs,vh")
+cargo:rerun-if-env-changed=CFLAGS_aarch64-apple-darwin
+CFLAGS_aarch64-apple-darwin = None
+cargo:rerun-if-env-changed=CFLAGS_aarch64_apple_darwin
+CFLAGS_aarch64_apple_darwin = None
+cargo:rerun-if-env-changed=HOST_CFLAGS
+HOST_CFLAGS = None
+cargo:rerun-if-env-changed=CFLAGS
+CFLAGS = None
+running: "cc" "-O0" "-ffunction-sections" "-fdata-sections" "-fPIC" "-gdwarf-2" "-fno-omit-frame-pointer" "-arch" "arm64" "-I" "/Users/tokki/.cargo/registry/src/index.crates.io-6f17d22bba15001f/dart-sys-4.0.2/dart-sdk/include" "-Wall" "-Wextra" "-o" "/Users/tokki/Documents/HNU_2023_Capstone/00_\xed\x95\x99\xec\x88\xa0\xec\xa0\x9c \xeb\xb0\x9c\xed\x91\x9c\xec\x9e\x90\xeb\xa3\x8c/slide/target/debug/build/dart-sys-3805af2e2630b9f6/out/b527be2535570087-dart_api_dl.o" "-c" "/Users/tokki/.cargo/registry/src/index.crates.io-6f17d22bba15001f/dart-sys-4.0.2/dart-sdk/include/dart_api_dl.c"
+exit status: 0
+cargo:rerun-if-env-changed=AR_aarch64-apple-darwin
+AR_aarch64-apple-darwin = None
+cargo:rerun-if-env-changed=AR_aarch64_apple_darwin
+AR_aarch64_apple_darwin = None
+cargo:rerun-if-env-changed=HOST_AR
+HOST_AR = None
+cargo:rerun-if-env-changed=AR
+AR = None
+cargo:rerun-if-env-changed=ARFLAGS_aarch64-apple-darwin
+ARFLAGS_aarch64-apple-darwin = None
+cargo:rerun-if-env-changed=ARFLAGS_aarch64_apple_darwin
+ARFLAGS_aarch64_apple_darwin = None
+cargo:rerun-if-env-changed=HOST_ARFLAGS
+HOST_ARFLAGS = None
+cargo:rerun-if-env-changed=ARFLAGS
+ARFLAGS = None
+running: ZERO_AR_DATE="1" "ar" "cq" "/Users/tokki/Documents/HNU_2023_Capstone/00_\xed\x95\x99\xec\x88\xa0\xec\xa0\x9c \xeb\xb0\x9c\xed\x91\x9c\xec\x9e\x90\xeb\xa3\x8c/slide/target/debug/build/dart-sys-3805af2e2630b9f6/out/libdart_api_dl.a" "/Users/tokki/Documents/HNU_2023_Capstone/00_\xed\x95\x99\xec\x88\xa0\xec\xa0\x9c \xeb\xb0\x9c\xed\x91\x9c\xec\x9e\x90\xeb\xa3\x8c/slide/target/debug/build/dart-sys-3805af2e2630b9f6/out/b527be2535570087-dart_api_dl.o"
+exit status: 0
+running: "ar" "s" "/Users/tokki/Documents/HNU_2023_Capstone/00_\xed\x95\x99\xec\x88\xa0\xec\xa0\x9c \xeb\xb0\x9c\xed\x91\x9c\xec\x9e\x90\xeb\xa3\x8c/slide/target/debug/build/dart-sys-3805af2e2630b9f6/out/libdart_api_dl.a"
+exit status: 0
+cargo:rustc-link-lib=static=dart_api_dl
+cargo:rustc-link-search=native=/Users/tokki/Documents/HNU_2023_Capstone/00_학술제 발표자료/slide/target/debug/build/dart-sys-3805af2e2630b9f6/out
