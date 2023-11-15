@@ -1,10 +1,10 @@
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:provider/provider.dart';
-import 'package:rinf/rinf.dart';
-import 'package:slide/messages/render_request.pb.dart' as renderRequest;
+import 'package:image/image.dart' as img;
 
 void main() {
   runApp(const MyApp());
@@ -217,7 +217,7 @@ class _MyHomePage extends State<MyHomePage> {
                   IconButton(
                       onPressed: () {
                         setState(() {
-                          if (appState.selectedIndex < 7) {
+                          if (appState.selectedIndex < 12) {
                             appState.selectedIndex++;
                           }
                         });
@@ -250,7 +250,10 @@ class TitlePage extends StatelessWidget {
       color: theme.colorScheme.primary,
     );
 
-    return Text('Ray Marching 을 이용한 3D 렌더링', style: style);
+    return Padding(
+      padding: const EdgeInsets.all(32.0),
+      child: Text('Ray Marching 을 이용한 3D 렌더링', style: style),
+    );
   }
 }
 
@@ -270,6 +273,13 @@ class WhatisRenderingPage extends StatelessWidget {
     final labelstyle = theme.primaryTextTheme.titleLarge!.copyWith(
       color: theme.colorScheme.primary,
     );
+    double _imageHeight() {
+      if (MediaQuery.of(context).size.width >= 1920) {
+        return 480.0;
+      } else {
+        return MediaQuery.of(context).size.width / 4;
+      }
+    }
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -277,7 +287,10 @@ class WhatisRenderingPage extends StatelessWidget {
         Text('What is Rendering?', style: style),
         SizedBox(height: 16),
         Text('3차원 공간 위에 정의된 물체를 2차원 평면, 즉 화면 위에 표시하는 것', style: bodystyle),
-        Image.asset('images/raytrace.png', width: 640, height: 640),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset('images/raytrace.png', height: _imageHeight()),
+        ),
         Text('재귀적 레이트레이싱 기법으로 렌더링된 구', style: bodystyle),
         Text('출처: https://en.wikipedia.org/wiki/Ray_tracing_(graphics)',
             style: labelstyle)
@@ -397,6 +410,13 @@ class ExamplePage extends StatelessWidget {
     final labelstyle = theme.primaryTextTheme.titleLarge!.copyWith(
       color: theme.colorScheme.primary,
     );
+    double _imageHeight() {
+      if (MediaQuery.of(context).size.width >= 1920) {
+        return 480.0;
+      } else {
+        return MediaQuery.of(context).size.width / 3;
+      }
+    }
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -405,7 +425,10 @@ class ExamplePage extends StatelessWidget {
           'Example',
           style: style,
         ),
-        Image.asset('images/march.png'),
+        Image.asset(
+          'images/march.png',
+          height: _imageHeight(),
+        ),
         Text('왼쪽 위의 빨간 점이 맵에 대한 SDF 값만큼 주어진 방향으로 진행하여 최종적으로 오른쪽 아래의 벽에 도달하는 예시',
             style: labelstyle)
       ],
@@ -587,7 +610,7 @@ class _ShowingPageState extends State<ShowingPage> {
   double _currentAngle = 0;
   bool _isRendered = false;
   final List<bool> _isSelected = [true, false, false];
-  Uint8List _renderedImages = Uint8List(640 * 480 * 4);
+  Uint8List _renderedImage = Uint8List(640 * 480 * 4);
 
   @override
   Widget build(BuildContext context) {
@@ -610,22 +633,12 @@ class _ShowingPageState extends State<ShowingPage> {
       children: [
         Text('Showing', style: style),
         Container(
-          width: 640,
-          height: 480,
+          width: 577,
+          height: 408,
           child: _isRendered
               ? Container(
                   color: theme.colorScheme.primaryContainer,
-                  child: Center(
-                    child: Text(
-                      'Rendered',
-                      style: style,
-                    ),
-                  ),
-                )
-              /*Image.memory(
-                  _renderedImages,
-                  fit: BoxFit.contain,
-                )*/
+                  child: Image.memory(_renderedImage))
               : Container(
                   color: theme.colorScheme.primaryContainer,
                   child: Center(
@@ -673,27 +686,25 @@ class _ShowingPageState extends State<ShowingPage> {
         ElevatedButton(
             style: ElevatedButton.styleFrom(
                 primary: theme.colorScheme.secondaryContainer),
-            onPressed: () async {
+            onPressed: () {
+              var render;
+
               setState(() {
                 _isRendered = true;
-              });
-
-              final requestMessage = renderRequest.RenderRequest(
-                angle: _currentAngle,
-                style: _isSelected.indexOf(true),
-              );
-              final rustRequest = RustRequest(
-                resource: renderRequest.ID,
-                operation: RustOperation.Read,
-                message: requestMessage.writeToBuffer(),
-              );
-              final rustResponse = await requestToRust(rustRequest);
-              final responseMessage = renderRequest.RenderResponse.fromBuffer(
-                rustResponse.message!,
-              );
-
-              setState(() {
-                _renderedImages = Uint8List.fromList(responseMessage.image);
+                switch (_isSelected.indexOf(true)) {
+                  case 0:
+                    _renderedImage = _renderFill();
+                    break;
+                  case 1:
+                    _renderedImage = _renderBorder();
+                    break;
+                  case 2:
+                    _renderedImage = _renderDistance();
+                    break;
+                }
+                img.Image image = img.Image.fromBytes(
+                    width: 577, height: 408, bytes: _renderedImage.buffer);
+                _renderedImage = img.encodeJpg(image);
               });
             },
             child: Padding(
@@ -705,6 +716,238 @@ class _ShowingPageState extends State<ShowingPage> {
             ))
       ],
     );
+  }
+
+  Float32x4 _getCamera(double angle) {
+    return Float32x4(2 * math.sin(angle), 2 * math.cos(angle), 1, 0);
+  }
+
+  Float32x4 _getCameraDirection(double angle) {
+    return Float32x4(-2 / math.sqrt(5) * math.sin(angle),
+        -2 / math.sqrt(5) * math.cos(angle), -1 / math.sqrt(5), 0);
+  }
+
+  Float32x4 _getXPixelDirection(double angle) {
+    return Float32x4(math.cos(angle), -math.sin(angle), 0, 0);
+  }
+
+  Float32x4 _getYPixelDirection(double angle) {
+    return Float32x4((2 / math.sqrt(5)) * math.sin(angle),
+        (2 / math.sqrt(5)) * -math.cos(angle), 1 / math.sqrt(5), 0);
+  }
+
+  Float32x4 _getPixelDirection(Float32x4 cameraDirection,
+      Float32x4 xPixelDirection, Float32x4 yPixelDirection, int x, int y) {
+    double xDisplacement = ((x.toDouble() - 288.5) / 577.0) * 0.707;
+    double yDisplacement = ((y.toDouble() - 204.0) / 408.0) * 0.5;
+
+    Float32x4 xMultiplier =
+        Float32x4(xDisplacement, xDisplacement, xDisplacement, 0);
+    Float32x4 yMultiplier =
+        Float32x4(yDisplacement, yDisplacement, yDisplacement, 0);
+
+    Float32x4 pixelDirection = cameraDirection +
+        xMultiplier * xPixelDirection +
+        yMultiplier * yPixelDirection;
+
+    double pixelDirectionNorm = math.sqrt(pixelDirection.x * pixelDirection.x +
+        pixelDirection.y * pixelDirection.y +
+        pixelDirection.z * pixelDirection.z +
+        pixelDirection.w * pixelDirection.w);
+
+    Float32x4 pixelDirectionDivisor = Float32x4(
+        pixelDirectionNorm, pixelDirectionNorm, pixelDirectionNorm, 0);
+
+    return pixelDirection / pixelDirectionDivisor;
+  }
+
+  double _getDistance(Float32x4 currentPosition) {
+    double radius = math.sqrt(currentPosition.x * currentPosition.x +
+        currentPosition.z * currentPosition.z);
+    double altitude = currentPosition.y;
+
+    return math.sqrt(math.pow(radius - 0.5, 2) + math.pow(altitude, 2)) - 0.25;
+  }
+
+  Uint8List _renderBorder() {
+    double angle = _currentAngle * math.pi / 180;
+    Uint8List image = Uint8List(577 * 408 * 4);
+    Float32x4 camera = _getCamera(angle);
+    Float32x4 cameraDirection = _getCameraDirection(angle);
+    Float32x4 xPixelDirection = _getXPixelDirection(angle);
+    Float32x4 yPixelDirection = _getYPixelDirection(angle);
+
+    double firstMarch = _getDistance(camera);
+    Float32x4 firstMarchMultiplier =
+        Float32x4(firstMarch, firstMarch, firstMarch, 0);
+
+    for (int x = 0; x < 577; x++) {
+      for (int y = 0; y < 408; y++) {
+        int index = (y * 577 + x) * 4;
+        Float32x4 pixelDirection = _getPixelDirection(
+            cameraDirection, xPixelDirection, yPixelDirection, x, y);
+        Float32x4 currentPosition =
+            camera + pixelDirection * firstMarchMultiplier;
+        double marched = firstMarch;
+        int steps = 0;
+        double min = 5;
+
+        while (steps < 25 && marched < 5) {
+          //distance from torus
+          double march = _getDistance(currentPosition);
+          Float32x4 marchMultiplier = Float32x4(march, march, march, 0);
+          currentPosition = currentPosition + pixelDirection * marchMultiplier;
+          steps++;
+          marched += march;
+
+          if (march < 0.01) {
+            image[index] = 0;
+            image[index + 1] = 0;
+            image[index + 2] = 0;
+            image[index + 3] = 255;
+
+            break;
+          } else if (march < min) {
+            min = march;
+          }
+        }
+
+        if (steps == 25 || marched >= 5) {
+          int luma = 255 - ((min - 0.01) / 0.04 * 255).toInt();
+
+          image[index] = luma;
+          image[index + 1] = luma;
+          image[index + 2] = luma;
+          image[index + 3] = 255;
+        }
+      }
+    }
+    return image;
+  }
+
+  Uint8List _renderDistance() {
+    Uint8List image = Uint8List(577 * 408 * 4);
+    Float32List marchmap = Float32List(577 * 408);
+    double angle = _currentAngle * math.pi / 180;
+    Float32x4 camera = _getCamera(angle);
+    Float32x4 cameraDirection = _getCameraDirection(angle);
+    Float32x4 xPixelDirection = _getXPixelDirection(angle);
+    Float32x4 yPixelDirection = _getYPixelDirection(angle);
+
+    double firstMarch = _getDistance(camera);
+    Float32x4 firstMarchMultiplier =
+        Float32x4(firstMarch, firstMarch, firstMarch, 0);
+    double maxDistance = 0;
+    double minDistance = 5;
+
+    for (int x = 0; x < 577; x++) {
+      for (int y = 0; y < 408; y++) {
+        int index = (y * 577 + x) * 4;
+        Float32x4 pixelDirection = _getPixelDirection(
+            cameraDirection, xPixelDirection, yPixelDirection, x, y);
+        Float32x4 currentPosition =
+            camera + pixelDirection * firstMarchMultiplier;
+        double marched = firstMarch;
+        int steps = 0;
+
+        while (steps < 25 && marched < 5) {
+          double march = _getDistance(currentPosition);
+          Float32x4 marchMultiplier = Float32x4(march, march, march, 0);
+          currentPosition = currentPosition + pixelDirection * marchMultiplier;
+          steps++;
+          marched += march;
+
+          if (march < 0.01) {
+            marchmap[y * 577 + x] = marched;
+
+            if (marched > maxDistance) {
+              maxDistance = marched;
+            }
+
+            if (marched < minDistance) {
+              minDistance = marched;
+            }
+
+            break;
+          }
+        }
+
+        if (steps == 25 || marched >= 5) {
+          marchmap[y * 577 + x] = -1;
+        }
+      }
+    }
+
+    for (int i = 0; i < 577 * 408; i++) {
+      if (marchmap[i] >= 0) {
+        image[i * 4] =
+            ((marchmap[i] - minDistance) / (maxDistance - minDistance) * 255)
+                .toInt();
+        image[i * 4 + 1] =
+            ((marchmap[i] - minDistance) / (maxDistance - minDistance) * 255)
+                .toInt();
+        image[i * 4 + 2] =
+            ((marchmap[i] - minDistance) / (maxDistance - minDistance) * 255)
+                .toInt();
+        image[i * 4 + 3] = 255;
+      } else {
+        image[i * 4] = 0;
+        image[i * 4 + 1] = 0;
+        image[i * 4 + 2] = 0;
+        image[i * 4 + 3] = 255;
+      }
+    }
+
+    return image;
+  }
+
+  Uint8List _renderFill() {
+    double angle = _currentAngle * math.pi / 180;
+    Uint8List image = Uint8List(577 * 408 * 4);
+    Float32x4 camera = _getCamera(angle);
+    Float32x4 cameraDirection = _getCameraDirection(angle);
+    Float32x4 xPixelDirection = _getXPixelDirection(angle);
+    Float32x4 yPixelDirection = _getYPixelDirection(angle);
+
+    double firstMarch = _getDistance(camera);
+    Float32x4 firstMarchMultiplier =
+        Float32x4(firstMarch, firstMarch, firstMarch, 0);
+
+    for (int x = 0; x < 577; x++) {
+      for (int y = 0; y < 408; y++) {
+        int index = (y * 577 + x) * 4;
+        Float32x4 pixelDirection = _getPixelDirection(
+            cameraDirection, xPixelDirection, yPixelDirection, x, y);
+        Float32x4 currentPosition =
+            camera + pixelDirection * firstMarchMultiplier;
+        double marched = firstMarch;
+        int steps = 0;
+
+        while (steps < 25 && marched < 5) {
+          double march = _getDistance(currentPosition);
+          Float32x4 marchMultiplier = Float32x4(march, march, march, 0);
+          currentPosition = currentPosition + pixelDirection * marchMultiplier;
+          steps++;
+
+          if (march < 0.01) {
+            image[index] = 255;
+            image[index + 1] = 255;
+            image[index + 2] = 255;
+            image[index + 3] = 255;
+            break;
+          }
+        }
+
+        if (steps == 25 || marched >= 5) {
+          image[index] = 0;
+          image[index + 1] = 0;
+          image[index + 2] = 0;
+          image[index + 3] = 255;
+        }
+      }
+    }
+
+    return image;
   }
 }
 
