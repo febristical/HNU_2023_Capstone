@@ -118,7 +118,30 @@ impl Renderer {
                         }
                     }
                 }
+<<<<<<< HEAD
             }}).await.unwrap();
+=======
+            }
+        }
+
+        let maxmarched: f32 = marchedmap.iter().zip(self.rendered.iter().step_by(4)).fold(0.0, |a, (&b, &t)| if t != 0 {a.max(b)} else {a});
+        let minmarched: f32 = marchedmap.iter().zip(self.rendered.iter().step_by(4)).fold(0.0, |a, (&b, &t)| if t != 0 {a.min(b)} else {a});
+
+        if  RenderStyle::Distance == self.selected { 
+            for x in 0..self.width as usize {
+            for y in 0..self.height as usize {
+                let index = (y * self.width as usize + x) * 4;
+                let luma = ((marchedmap[index] - minmarched) / (maxmarched - minmarched) * 255.0) as u8;
+
+                if self.rendered[index] != 0 {
+                    self.rendered[index] = luma;
+                    self.rendered[index + 1] = luma;
+                    self.rendered[index + 2] = luma;
+                    self.rendered[index + 3] = 255;
+            }}
+        }}
+
+>>>>>>> 7e4a270a60156b19c4899395c67398fd4d2d6472
     }
 }
 
